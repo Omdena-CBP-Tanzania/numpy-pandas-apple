@@ -69,7 +69,7 @@ def handle_missing_values(df):
     
     # Step 2: Fill missing values
     # Fill numerical columns with the mean of each column
-    df.fillna(df.mean(), inplace=True)
+    df.fillna(df.mean(numeric_only=True), inplace=True)
     
     # Fill categorical columns with the mode (most frequent value) of each column
     for col in df.select_dtypes(include=['object']).columns:
@@ -78,7 +78,21 @@ def handle_missing_values(df):
     return df
     pass
 
-def select_data(df):
+def select_data(df, columns=None, rows=None):
+    """
+    Select specific columns and rows from DataFrame
+    Returns:
+        pandas.DataFrame: Selected data
+    """
+    # Select columns if specified
+    if columns is not None:
+        df = df[columns]
+    
+    # Select rows if specified
+    if rows is not None:
+        df = df.iloc[rows]
+    
+    return df
     """
     Select specific columns and rows from DataFrame
     Returns:
@@ -101,8 +115,9 @@ def rename_columns(df):
     Returns:
         pandas.DataFrame: DataFrame with renamed columns
     """
-    # Rename columns using the provided mapping
-    df = df.rename(columns=column_mapping)
-    
+     # Create a copy of the DataFrame to avoid modifying the original
+    df = df.copy()
+    # Rename columns: convert to lowercase and replace spaces with underscores
+    df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
     return df
     pass
