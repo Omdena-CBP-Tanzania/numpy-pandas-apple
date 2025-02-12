@@ -7,7 +7,7 @@ def create_1d_array():
     Returns:
         numpy.ndarray: 1D array
     """
-    pass
+    return np.array([1,2,3,4,5])
 
 def create_2d_array():
     """
@@ -15,7 +15,7 @@ def create_2d_array():
     Returns:
         numpy.ndarray: 2D array
     """
-    pass
+    return np.arange(1,10).reshape(3,3)
 
 def array_operations(arr):
     """
@@ -26,7 +26,10 @@ def array_operations(arr):
     Returns:
         tuple: (mean, std_dev, max_value)
     """
-    pass
+    mean = np.mean(arr)
+    std_dev = np.std(arr)
+    max_value = np.max(arr)
+    return mean, std_dev, max_value
 
 def read_csv_file(filepath):
     """
@@ -36,7 +39,7 @@ def read_csv_file(filepath):
     Returns:
         pandas.DataFrame: Loaded dataframe
     """
-    pass
+    return pd.read_csv(filepath)
 
 def handle_missing_values(df):
     """
@@ -46,7 +49,13 @@ def handle_missing_values(df):
     Returns:
         pandas.DataFrame: Cleaned dataframe
     """
-    pass
+    missing_values = df.isnull().sum() # Identify number of missing values
+    print("Missing values per column:\n", missing_values)
+
+    df.fillna(df.mean(numeric_only=True), inplace=True) # Fill numeric columns with mean
+    for col in df.select_dtypes(include=['object']).columns:
+        df[col] = df[col].fillna(df[col].mode()[0]) # Fill categorical columns with mode
+    return df
 
 def select_data(df):
     """
@@ -54,7 +63,8 @@ def select_data(df):
     Returns:
         pandas.DataFrame: Selected data
     """
-    pass
+    return df.iloc[:5, :2] # Select the first 5 rows and the first 2 columns from the dataframe
+
 
 def rename_columns(df):
     """
@@ -62,4 +72,5 @@ def rename_columns(df):
     Returns:
         pandas.DataFrame: DataFrame with renamed columns
     """
-    pass
+    df.rename(columns=lambda x: x.strip().lower().replace(' ', '_'), inplace=True) # Converts column names with lowercases, removes spaces, and replaces them with underscores
+    return df
